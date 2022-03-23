@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.security.core.Authentication;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +27,7 @@ public class JwtTokenProvider {
     private String SECRET_KEY;
 
     @Value("${jwt.token.expired}")
-    private String EXPIRATION_TIME;
+    private long DURATION_TOKEN;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -46,14 +47,9 @@ public class JwtTokenProvider {
         claims.put("roles", getRoleNames(roles));
 
         Date now = new Date();
-        Date livingTime = new Date(now.getTime() + EXPIRATION_TIME);
 
-        return Jwts.builder()
-                .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(livingTime)
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
-                .compact();
+        return Jwts.builder().setClaims(claims).setIssuedAt(now).setExpiration(new Date(now.getTime() + DURATION_TOKEN))
+                .signWith(SignatureAlgorithm.HS512, SECRET_KEY).compact();
     }
 
     public Authentication getAuthentication(String token) {

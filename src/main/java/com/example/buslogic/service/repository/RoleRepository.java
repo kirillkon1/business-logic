@@ -1,4 +1,4 @@
-package com.example.buslogic.repository;
+package com.example.buslogic.service.repository;
 
 import com.example.buslogic.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;

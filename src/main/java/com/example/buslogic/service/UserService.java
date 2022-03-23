@@ -2,8 +2,8 @@ package com.example.buslogic.service;
 
 import com.example.buslogic.model.Role;
 import com.example.buslogic.model.User;
-import com.example.buslogic.repository.RoleRepository;
-import com.example.buslogic.repository.UserRepository;
+import com.example.buslogic.service.repository.RoleRepository;
+import com.example.buslogic.service.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,8 +27,13 @@ public class UserService {
     }
 
 
-    public User register(User user) {
-        Role roleUser = roleRepository.findByName("ROLE_USER");
+    public String register(User user){
+
+        User check = userRepository.findByUsername(user.getUsername());
+
+        if(check != null) return "Такой пользватель уже существует!";
+
+        Role roleUser = roleRepository.findByName("USER");
         List<Role> userRoles = new ArrayList<>();
         userRoles.add(roleUser);
 
@@ -39,7 +44,7 @@ public class UserService {
 
         log.info("IN register - user: {} successfully registered", registeredUser);
 
-        return registeredUser;
+        return "Пользователь #" + user.getUsername()+ " успешно зарегистрирован!";
     }
 
     public List<User> getAll() {
@@ -50,7 +55,13 @@ public class UserService {
 
     public User findByUsername(String username) {
         User result = userRepository.findByUsername(username);
-        log.info("IN findByUsername - user: {} found by username: {}", result, username);
+//        log.info("IN findByUsername - user: {} found by username: {}", result, username);
+        return result;
+    }
+
+    public User findByUsernameAndPassword(String username, String password){
+        User result = userRepository.findByUsernameAndPassword(username, password);
+        log.info("IN findByUsernameAndPassword - user: {} found by username: {}", result, username);
         return result;
     }
 

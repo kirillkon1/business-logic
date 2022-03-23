@@ -1,9 +1,12 @@
 package com.example.buslogic.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "answer")
+@Data
 public class Answer extends BaseEntity{
 
     @Column(name = "content", length = 1000, nullable = false)

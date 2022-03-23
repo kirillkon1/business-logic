@@ -12,17 +12,19 @@ public class JwtUserFactory {
     public JwtUserFactory() {
     }
 
-    public static JwtUser create(User user){
+    public static JwtUser create(User user) {
         return new JwtUser(
                 user.getId(),
                 user.getUsername(),
                 user.getPassword(),
                 user.getEmail(),
-                convert(user.getRoles())
+                convertRoles(user.getRoles())
         );
     }
 
-    private static List<GrantedAuthority> convert(List<Role> roles){
-        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+    private static List<GrantedAuthority> convertRoles(List<Role> roles) {
+        return roles.stream().map(role ->
+                    new SimpleGrantedAuthority(role.getName())
+                ).collect(Collectors.toList());
     }
 }

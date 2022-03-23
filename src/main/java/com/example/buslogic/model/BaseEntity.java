@@ -16,10 +16,10 @@ public class BaseEntity {
     private Long id;
 
     @CreatedDate
-    @Column(name = "created")
+    @Column(name = "createdAt")
     private Date created;
 
     @LastModifiedDate
-    @Column(name = "updated")
+    @Column(name = "updatedAt")
     private Date updated;
 }
