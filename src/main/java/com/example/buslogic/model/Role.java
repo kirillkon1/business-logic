@@ -10,8 +10,11 @@ import java.util.List;
 
 @Entity
 @Table(name = "roles")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class Role{
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Role {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)

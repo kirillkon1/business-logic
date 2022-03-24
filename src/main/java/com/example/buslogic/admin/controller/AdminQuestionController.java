@@ -17,17 +17,17 @@ public class AdminQuestionController {
     }
 
     @GetMapping(path = "/app")
-    public List<Question> getAllToApp(){
-       return adminQuestionService.getListToApprove();
+    public List<Question> getAllToApp() {
+        return adminQuestionService.getListToApprove();
     }
 
     @PutMapping(path = "/{id}")
-    public void approveQuestion(@PathVariable Long id){
+    public void approveQuestion(@PathVariable Long id) {
         adminQuestionService.approveQuestion(id);
     }
 
     @DeleteMapping(path = "/{id}")
-    public void deleteQuestion(@PathVariable Long id){
+    public void deleteQuestion(@PathVariable Long id) {
         adminQuestionService.deleteQuestion(id);
     }
 

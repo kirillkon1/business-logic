@@ -64,7 +64,7 @@ public class AuthController {
 
 
     @PostMapping(path = "/register")
-    public String register(@RequestBody AuthDTO authDTO){
+    public String register(@RequestBody AuthDTO authDTO) {
         return userService.register(authDTO.toUser());
     }
 }

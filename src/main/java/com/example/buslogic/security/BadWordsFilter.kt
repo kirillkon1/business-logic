@@ -14,7 +14,7 @@ class BadWordsFilter {
     /**
      * if fun check returns false - the message has ban words
      */
-    fun check(title: String, content : String = ""): Boolean =
+    fun check(title: String, content: String = ""): Boolean =
         listOf(title, content)
             .flatMap { it.split(" ") }
             .toSet()

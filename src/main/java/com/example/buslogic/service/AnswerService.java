@@ -19,9 +19,9 @@ import java.util.List;
 @Service
 @Slf4j
 public class AnswerService {
+
     private final AnswerRepository answerRepository;
     private final UserService userService;
-
     private final BadWordsFilter badWordsFilter = new BadWordsFilter();
 
     @Autowired

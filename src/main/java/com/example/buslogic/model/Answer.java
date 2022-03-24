@@ -7,11 +7,11 @@ import javax.persistence.*;
 @Entity
 @Table(name = "answer")
 @Data
-public class Answer extends BaseEntity{
+public class Answer extends BaseEntity {
 
     @Column(name = "content", length = 1000, nullable = false)
     private String content;
-    
+
     @Column(name = "user_id", nullable = false)
     private Long userId;
 

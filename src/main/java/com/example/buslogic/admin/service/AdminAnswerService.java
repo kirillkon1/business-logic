@@ -14,17 +14,17 @@ public class AdminAnswerService {
     @Autowired
     AnswerRepository answerRepository;
 
-    public void approve(Long id){
+    public void approve(Long id) {
         Answer answer = answerRepository.getById(id);
         answer.setStatus(Status.APPROVED);
         answerRepository.save(answer);
     }
 
-    public void delete(Long id){
+    public void delete(Long id) {
         answerRepository.deleteById(id);
     }
 
-    public List<Answer> getAnswersToModerate(){
+    public List<Answer> getAnswersToModerate() {
         return answerRepository.getAllToModerate();
     }
 

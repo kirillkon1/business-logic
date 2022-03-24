@@ -18,12 +18,17 @@ public class QuestionController {
 
 
     @GetMapping
-    public List<Question> getUserQuestions(){
-            return questionService.getUserQuestions();
+    public List<Question> getUserQuestions() {
+        return questionService.getUserQuestions();
+    }
+
+    @GetMapping(path = "/all")
+    public List<Question> getAllQuestions() {
+        return questionService.getAllQuestions();
     }
 
     @PostMapping
-    public Question createQuestion(@RequestBody QuestionDTO dto){
+    public Question createQuestion(@RequestBody QuestionDTO dto) {
         return questionService.createQuestion(dto);
     }
 
@@ -31,7 +36,6 @@ public class QuestionController {
     public void deleteQuestion(@PathVariable Long id) throws AccessDeniedException {
         questionService.deleteQuestion(id);
     }
-
 
 
 }

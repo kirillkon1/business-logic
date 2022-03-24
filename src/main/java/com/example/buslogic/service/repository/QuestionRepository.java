@@ -10,9 +10,13 @@ import java.util.List;
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
 
-    @Query("select q from Question q where q.userId = ?1 and q.status = 'APPROVED'")
+    @Query("select q from Question q where q.userId = ?1")
     List<Question> getAllByUserId(Long userId);
 
     @Query("select q from Question q where q.status = 'ON_MODERATION'")
     List<Question> getListToModerate();
+
+    @Query("select q from Question q where q.status = 'APPROVED'")
+    List<Question> getAllQuestions();
+
 }

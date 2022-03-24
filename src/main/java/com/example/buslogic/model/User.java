@@ -1,6 +1,5 @@
 package com.example.buslogic.model;
 
-import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -21,9 +20,7 @@ public class User extends BaseEntity {
     private String email;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_roles",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
+    @JoinTable(name = "user_roles", joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")}, inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private List<Role> roles;
 
 }

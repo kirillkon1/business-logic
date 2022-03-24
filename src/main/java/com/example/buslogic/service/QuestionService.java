@@ -76,4 +76,7 @@ public class QuestionService {
         return userService.findByUsername(currentUser);
     }
 
+    public List<Question> getAllQuestions() {
+        return questionRepository.getAllQuestions();
+    }
 }

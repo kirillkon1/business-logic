@@ -16,7 +16,7 @@ public class VoteController {
     VoteService voteService;
 
     @PutMapping
-    public void vote(@RequestBody VoteDto voteDto){
+    public void vote(@RequestBody VoteDto voteDto) {
         voteService.createVote(voteDto);
     }
 }

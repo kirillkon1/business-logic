@@ -15,17 +15,17 @@ public class AdminAnswerController {
     AdminAnswerService answerService;
 
     @GetMapping()
-    public List<Answer> getAnswersToModerate(){
+    public List<Answer> getAnswersToModerate() {
         return answerService.getAnswersToModerate();
     }
 
     @PutMapping(path = "/{id}")
-    public void approve(@PathVariable Long id){
+    public void approve(@PathVariable Long id) {
         answerService.approve(id);
     }
 
     @DeleteMapping(path = "/{id}")
-    public void delete(@PathVariable Long id){
-       answerService.delete(id);
+    public void delete(@PathVariable Long id) {
+        answerService.delete(id);
     }
 }
