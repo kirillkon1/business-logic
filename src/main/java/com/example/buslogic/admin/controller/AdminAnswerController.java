@@ -14,18 +14,18 @@ public class AdminAnswerController {
     @Autowired
     AdminAnswerService answerService;
 
-    @GetMapping()
+    @GetMapping(path="/approveList")
     public List<Answer> getAnswersToModerate() {
         return answerService.getAnswersToModerate();
     }
 
-    @PutMapping(path = "/{id}")
+    @PutMapping(path = "/{id}/approve")
     public void approve(@PathVariable Long id) {
         answerService.approve(id);
     }
 
-    @DeleteMapping(path = "/{id}")
+    @PutMapping(path = "/{id}/decline")
     public void delete(@PathVariable Long id) {
-        answerService.delete(id);
+        answerService.decline(id);
     }
 }

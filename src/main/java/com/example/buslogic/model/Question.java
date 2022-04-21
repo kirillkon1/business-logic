@@ -3,6 +3,7 @@ package com.example.buslogic.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.Instant;
 
 @Entity
 @Table(name = "question")

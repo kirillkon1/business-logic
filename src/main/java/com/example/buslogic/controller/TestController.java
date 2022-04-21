@@ -1,10 +1,13 @@
 package com.example.buslogic.controller;
 
+import com.example.buslogic.activeMQ.MessageSender;
+import com.example.buslogic.service.QuestionService;
 import com.example.buslogic.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,15 +22,21 @@ public class TestController {
     @Autowired
     UserDetailsService userDetailsService;
 
+    @Autowired
+    MessageSender messageSender;
+
+    @Autowired
+    QuestionService questionService;
+
     @GetMapping()
     public String getTest() {
 
-        UserDetails details = userDetailsService.loadUserByUsername("admin1");
-        if (details != null && details.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
-            System.out.println(details.getAuthorities());
-        }
+        questionService.setQuestionTimeout();
 
         return "test";
+    }
+
+    @GetMapping(path = "/{str}")
+    public void testJMS(@PathVariable String str){
     }
 }

@@ -7,28 +7,28 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/admin")
+@RequestMapping(path = "/admin/question")
 public class AdminQuestionController {
 
-    final AdminQuestionService adminQuestionService;
+    final AdminQuestionService questionService;
 
     public AdminQuestionController(AdminQuestionService adminQuestionService) {
-        this.adminQuestionService = adminQuestionService;
+        this.questionService = adminQuestionService;
     }
 
-    @GetMapping(path = "/app")
+    @GetMapping(path = "/approveList")
     public List<Question> getAllToApp() {
-        return adminQuestionService.getListToApprove();
+        return questionService.getListToApprove();
     }
 
-    @PutMapping(path = "/{id}")
+    @PutMapping(path = "/{id}/approve")
     public void approveQuestion(@PathVariable Long id) {
-        adminQuestionService.approveQuestion(id);
+        questionService.approve(id);
     }
 
-    @DeleteMapping(path = "/{id}")
+    @PutMapping(path = "/{id}/decline")
     public void deleteQuestion(@PathVariable Long id) {
-        adminQuestionService.deleteQuestion(id);
+        questionService.decline(id);
     }
 
 

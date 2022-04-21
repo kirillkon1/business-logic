@@ -10,7 +10,7 @@ import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/quest")
+@RequestMapping(path = "/question")
 public class QuestionController {
 
     @Autowired

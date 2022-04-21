@@ -1,10 +1,11 @@
 package com.example.buslogic.service;
 
+import com.example.buslogic.activeMQ.MessageSender;
 import com.example.buslogic.model.Answer;
 import com.example.buslogic.model.Status;
 import com.example.buslogic.model.User;
 import com.example.buslogic.model.dto.AnswerDTO;
-import com.example.buslogic.security.BadWordsFilter;
+import com.example.buslogic.util.BadWordsFilter;
 import com.example.buslogic.service.repository.AnswerRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.AccessDeniedException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -23,11 +27,13 @@ public class AnswerService {
     private final AnswerRepository answerRepository;
     private final UserService userService;
     private final BadWordsFilter badWordsFilter = new BadWordsFilter();
+    private final MessageSender messageSender;
 
     @Autowired
-    public AnswerService(AnswerRepository answerRepository, UserService userService) {
+    public AnswerService(AnswerRepository answerRepository, UserService userService, MessageSender messageSender) {
         this.answerRepository = answerRepository;
         this.userService = userService;
+        this.messageSender = messageSender;
     }
 
     public List<Answer> getAnswersByQuestion(Long id) {
@@ -48,9 +54,11 @@ public class AnswerService {
 
         if (badWordsFilter.check(dto.getContent(), "")) {
             answer.setStatus(Status.APPROVED);
+            messageSender.sendQueue("Created answer from user#" + user.getUsername() + " in question#id" + dto.getQuestion_id());
         } else {
             answer.setStatus(Status.ON_MODERATION);
             log.warn("Detected warning answer from user #{} in question id #{}", user.getUsername(), dto.getQuestion_id());
+            messageSender.sendAdminQueue("Detected warning answer from user#" + user.getUsername() + " in question#id" + dto.getQuestion_id());
         }
 
 //        log.info("user {} created question", user.getUsername());
@@ -73,5 +81,15 @@ public class AnswerService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUser = authentication.getName();
         return userService.findByUsername(currentUser);
+    }
+
+    // Помечает ответы (Answer), которые отправлены на модерацию и
+    // которые не рассматриваются 3 и более дней - помечаются статусом DECLINE (отменено)
+    // Меняет статус ответа с ON_MODERATION на DECLINE
+    @Transactional
+    public void setAnswerTimeout() {
+        LocalDateTime localDate = LocalDateTime.now().minusDays(3);
+        Date date = Date.from(localDate.atZone(ZoneId.systemDefault()).toInstant());
+        answerRepository.setTimeoutQuestion(date);
     }
 }

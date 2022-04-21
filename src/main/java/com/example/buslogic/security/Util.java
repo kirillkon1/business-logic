@@ -1,4 +1,4 @@
-package com.example.buslogic.util;
+package com.example.buslogic.security;
 
 
 import org.springframework.security.core.Authentication;

@@ -24,7 +24,7 @@ public class VoteService {
     @Autowired
     private VoteRepository voteRepository;
 
-    @Transactional()
+    @Transactional(rollbackFor = Exception.class)
     public void createVote(VoteDto voteDto){
         Vote vote = new Vote();
         vote.setAnswerId(voteDto.getAnswer_id());
@@ -43,6 +43,7 @@ public class VoteService {
             answer.setRating(answer.getRating() - 1);
         }
 
+        answerRepository.save(answer);
         voteRepository.save(vote);
     }
 

@@ -1,10 +1,10 @@
-package com.example.buslogic.security
+package com.example.buslogic.util
 
 import org.springframework.core.io.ClassPathResource
 
 class BadWordsFilter {
 
-    private val BAD_WORDS =
+    private val forbiddenWords =
         try {
             ClassPathResource("ban_words.txt").file.readLines().toSet()
         } catch (e: Exception) {
@@ -18,5 +18,5 @@ class BadWordsFilter {
         listOf(title, content)
             .flatMap { it.split(" ") }
             .toSet()
-            .intersect(BAD_WORDS).isEmpty()
+            .intersect(forbiddenWords).isEmpty()
 }

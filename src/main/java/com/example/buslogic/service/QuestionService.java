@@ -1,11 +1,12 @@
 package com.example.buslogic.service;
 
+import com.example.buslogic.activeMQ.MessageSender;
 import com.example.buslogic.model.dto.QuestionDTO;
 import com.example.buslogic.model.Question;
 import com.example.buslogic.model.Status;
 import com.example.buslogic.model.User;
 import com.example.buslogic.service.repository.QuestionRepository;
-import com.example.buslogic.security.BadWordsFilter;
+import com.example.buslogic.util.BadWordsFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -14,6 +15,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.AccessDeniedException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -22,18 +28,19 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
     private final UserService userService;
+    private final MessageSender messageSender;
 
     BadWordsFilter badWordsFilter = new BadWordsFilter();
 
     @Autowired
-    public QuestionService(QuestionRepository questionRepository, UserService userService) {
+    public QuestionService(QuestionRepository questionRepository, UserService userService, MessageSender messageSender) {
         this.questionRepository = questionRepository;
         this.userService = userService;
+        this.messageSender = messageSender;
     }
 
     public List<Question> getUserQuestions() {
         User user = getUserFromContext();
-        log.info("user {} get question", user.getUsername());
         return questionRepository.getAllByUserId(user.getId());
     }
 
@@ -50,7 +57,8 @@ public class QuestionService {
             question.setStatus(Status.APPROVED);
         } else {
             question.setStatus(Status.ON_MODERATION);
-            log.warn("Detected warning question from user #{}", user.getUsername());
+//            log.warn("Detected warning question from user #{}", user.getUsername());
+            messageSender.sendAdminQueue("Detected warning question from user#" + user.getUsername());
         }
 
         log.info("user {} created question", user.getUsername());
@@ -78,5 +86,15 @@ public class QuestionService {
 
     public List<Question> getAllQuestions() {
         return questionRepository.getAllQuestions();
+    }
+
+    // Помечает вопросы, которые отправлены на модерацию и
+    // которые не рассматриваются 7 и более дней - помечаются статусом DECLINE (отменено)
+    // Меняет статус вопроса с ON_MODERATION на DECLINE
+    @Transactional
+    public void setQuestionTimeout() {
+        LocalDateTime localDate = LocalDateTime.now().minusDays(7);
+        Date date = Date.from(localDate.atZone(ZoneId.systemDefault()).toInstant());
+        questionRepository.setTimeoutQuestion(date);
     }
 }
